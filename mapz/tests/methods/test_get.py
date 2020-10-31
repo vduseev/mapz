@@ -1,9 +1,10 @@
 import pytest
 
-from mapz.methods import get, getsert
+from mapz.methods.get import get
+
 
 # Basic dict
-d = {"name": "Boris"}
+d = {"name": "Duhast"}
 # Basic list
 l = [1, True, 4, {"a", "b"}, "text"]
 
@@ -21,7 +22,7 @@ nl.insert(0, list(l))
 def test_dict():
 
     # Existing, str key
-    assert get(d, "name") == "Boris"
+    assert get(d, "name") == "Duhast"
 
     # Non-existing, str key
     assert get(d, "surname") is None
@@ -56,17 +57,24 @@ def test_list():
     assert get(l, "-100000") is None
 
 
+def test_list_wrong_key():
+
+    assert get(l, "0s1") is None
+
+    assert get(l, True) is None
+
+
 def test_nested_dict():
 
     # Existing, not nested, str key
-    assert get(nd, "name") == "Boris"
+    assert get(nd, "name") == "Duhast"
 
     # Existing, nested, str key
     assert get(nd, "l.2") == 4
 
     assert get(nd, "l.-2") == "text"
 
-    assert get(nd, "l.-1.name") == "Boris"
+    assert get(nd, "l.-1.name") == "Duhast"
 
     assert get(nd, "d.l.1") == True
 
@@ -75,6 +83,13 @@ def test_nested_list():
 
     assert get(nl, 1) == True
 
-    assert get(nl, "-1.name") == "Boris"
+    assert get(nl, "-1.name") == "Duhast"
 
     assert get(nl, "0.3") == {"a", "b"}
+
+
+def test_wrong_data_type():
+    
+    assert get(True, "key") is None
+
+    assert get(None, 1, False) == False
