@@ -95,16 +95,17 @@ def test_immutable_traverse():
 
 def test_mutable_traverse_copy_dict():
 
-    def _on_kv(*args, **kwargs):
-        k, v = args
-
-        return (k, v)
+    assert traverse(duhast) == duhast
 
 
-    #import mapz.tests.debug
-    reconstructed = traverse(
-        duhast,
-        func=_on_kv
-    )
+def test_immutable_traverse_plain_object():
 
-    assert reconstructed == duhast
+    assert traverse(True) == True
+
+
+def test_mutable_traverse_plain_object():
+
+    assert traverse(
+        True, 
+        lambda *args, **kwargs: 1 + 2
+    ) == True
