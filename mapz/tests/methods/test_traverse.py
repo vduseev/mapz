@@ -1,5 +1,10 @@
-from typing import ByteString, Mapping
-from mapz.methods.traverse import traverse, isinstresult, iskwresult, issequence
+from typing import Mapping
+from mapz.methods.traverse import (
+    traverse,
+    isinstresult,
+    iskwresult,
+    issequence,
+)
 
 
 def test_issequence():
@@ -35,26 +40,22 @@ duhast = {
         "parental": "Vyacheslavovich",
         "songs": {
             "Du Hast (variations)": [
-                { 
+                {
                     "Du Hast - Live": {
                         "Wales": 2007,
                         "London": 2001,
                     }
                 },
-                "Du Hast - Remix"
+                "Du Hast - Remix",
             ]
         },
-        "perks": [
-            "awesome",
-            ["vocal", "brave"]
-        ]
+        "perks": ["awesome", ["vocal", "brave"]],
     },
-    "event": b"Babaika Fest"
+    "event": b"Babaika Fest",
 }
 
 
 def test_immutable_traverse():
-
     def _on_kv(*args, **kwargs):
         k, v = args
 
@@ -67,11 +68,7 @@ def test_immutable_traverse():
 
     visit_order = []
 
-    traverse(
-        duhast,
-        func=_on_kv,
-        tracking_list=visit_order
-    )
+    traverse(duhast, func=_on_kv, tracking_list=visit_order)
 
     assert visit_order == [
         ("person", "<dict>"),
@@ -105,7 +102,4 @@ def test_immutable_traverse_plain_object():
 
 def test_mutable_traverse_plain_object():
 
-    assert traverse(
-        True, 
-        lambda *args, **kwargs: 1 + 2
-    ) == True
+    assert traverse(True, lambda *args, **kwargs: 1 + 2) == True

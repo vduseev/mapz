@@ -1,4 +1,17 @@
-from typing import Any, Sequence, Mapping
+from typing import (
+    Any,
+    Callable,
+    List,
+    MutableMapping,
+    Sequence,
+    Mapping,
+    Tuple,
+    Union,
+)
+
+
+TraverseModificatorCallable = Callable[..., Union[None, Tuple[Any, Any]]]
+OrderingCallable = Callable[[Sequence], List]
 
 
 # [not-sequence-types]
@@ -24,9 +37,10 @@ def isinstresult(result: Any) -> bool:
 
 def traverse(
     arg: Any,
-    func=lambda *args, **kwargs: args,
-    key_order=lambda k: list(k),
-    list_order=lambda l: list(l),
+    func: TraverseModificatorCallable = lambda *args, **kwargs: args,
+    key_order: OrderingCallable = lambda keys: list(keys),
+    list_order: OrderingCallable = lambda items: list(items),
+    mapping_type=dict,
     **kwargs,
 ) -> Any:
 
@@ -37,8 +51,8 @@ def traverse(
     result = None
 
     if isinstance(arg, Mapping):
-        # This branch always returns ``dic``
-        d = dict()
+        # This branch always returns mapping
+        d = mapping_type()
 
         keys = key_order(arg.keys())
         for k in keys:
@@ -56,6 +70,7 @@ def traverse(
                     func,
                     key_order=key_order,
                     list_order=list_order,
+                    mapping_type=mapping_type,
                     **kwargs,
                 )
 
@@ -76,7 +91,12 @@ def traverse(
 
             if isinstance(i, Mapping) or issequence(i):
                 i = traverse(
-                    i, func, key_order=key_order, list_order=list_order, **kwargs
+                    i,
+                    func,
+                    key_order=key_order,
+                    list_order=list_order,
+                    mapping_type=mapping_type,
+                    **kwargs,
                 )
 
             l.append(i)
@@ -94,4 +114,3 @@ def traverse(
             return v
         else:
             return arg
-
