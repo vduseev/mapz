@@ -1,6 +1,15 @@
-import pytest
+from mapz.methods.get import get, getsert
 
-from mapz.methods.get import get
+
+def test_getsert():
+    data = {}
+
+    assert getsert(data, "key") is None
+
+    assert getsert(data, "key", True) == True
+    assert data["key"] == True
+
+    assert getsert(True, "key", False) is False
 
 
 # Basic dict
@@ -89,7 +98,7 @@ def test_nested_list():
 
 
 def test_wrong_data_type():
-    
+
     assert get(True, "key") is None
 
     assert get(None, 1, False) == False
