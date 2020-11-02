@@ -1,9 +1,9 @@
 runs:
   steps:
+    - name: Install poetry
+      run: pip install poetry
+      shell: bash
     - name: Install dependencies
-      run: |
-        # Install poetry package manager
-        pip install poetry
-
-        # Install dependencies with poetry
-        poetry install
+      run: poetry install
+      shell: bash
+      
