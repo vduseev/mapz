@@ -42,7 +42,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: test
-    if: contains(github.ref, master)
+    if: ${{ contains(github.ref, "master") }}
     steps:
       - name: Build and push to PyPI
         env:
