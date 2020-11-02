@@ -1,6 +1,6 @@
 # MapZ
 
-<h2 align="center">Extension of standard `dict` capabilities.</h2>
+<h2>Extension of standard `dict` capabilities.</h2>
 
 <p>
     <a href="https://github.com/ilexconf/mapz/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/ilexconf/mapz/release?logo=github"></a>
