@@ -1,4 +1,6 @@
+name: Setup package
 runs:
+  using: "composite"
   steps:
     - name: Install poetry
       run: pip install poetry
@@ -6,4 +8,3 @@ runs:
     - name: Install dependencies
       run: poetry install
       shell: bash
-      
