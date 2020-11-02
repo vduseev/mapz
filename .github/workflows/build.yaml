@@ -51,4 +51,8 @@ jobs:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
+          # Change version
+          sed -i "s/\(version = \"[[:digit:]]\.[[:digit:]]\).*\"/\1.$GITHUB_RUN_NUMBER\"/" pyproject.tom
+
+          # Publish
           poetry publish --build --username "$PYPI_USERNAME" --password "$PYPI_PASSWORD"
