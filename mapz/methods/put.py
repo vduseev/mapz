@@ -27,8 +27,7 @@ def put(
     result = value
     while key_parts:
         k = key_parts.pop()
-        data_type = type(data)
-        d = data_type()
+        d = mapping_type()
         dict.__setitem__(d, k, result)
         result = d
 
