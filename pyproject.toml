@@ -1,9 +1,14 @@
 [tool.poetry]
 name = "mapz"
-version = "1.0.0"
+version = "1.1.0"
 description = "Extension of dict features"
 authors = ["vduseev <vagiz@duseev.com>"]
+maintainers = ["vduseev <vagiz@duseev.com>"]
 license = "MIT"
+keywords = ["map", "dict", "mapping", "interface"]
+readme = "README.md"
+homepage = "https://github.com/ilexconf/mapz"
+repository = "https://github.com/ilexconf/mapz"
 
 [tool.poetry.dependencies]
 python = "^3.8"

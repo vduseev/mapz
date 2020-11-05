@@ -74,6 +74,7 @@ class Mapz(_DefaultMapz):
             key_sep=key_sep,
             merge_method=merge_method,
             merge_inverse=merge_inverse,
+            mapping_type=Mapz,
         )
 
     def submerge(
@@ -90,6 +91,7 @@ class Mapz(_DefaultMapz):
             key_sep=key_sep,
             merge_method=merge_method,
             merge_inverse=True,
+            mapping_type=Mapz,
         )
 
     def map(
@@ -102,23 +104,28 @@ class Mapz(_DefaultMapz):
             data=self,
             modificator=modificator,
             inplace=inplace,
+            mapping_type=Mapz,
             **kwargs,
         )
 
     def copy(self):
-        return methods.deepclone(self)
+        return methods.deepclone(self, mapping_type=Mapz)
 
     def lower(self, inplace: bool = False):
-        return modifiers.to_lowercase(self, inplace=inplace)
+        return modifiers.to_lowercase(
+            self, inplace=inplace, mapping_type=Mapz
+        )
 
     def upper(self, inplace: bool = False):
-        return modifiers.to_uppercase(self, inplace=inplace)
+        return modifiers.to_uppercase(
+            self, inplace=inplace, mapping_type=Mapz
+        )
 
     def flatten(
         self, prefix: str = "", sep: str = ".", inplace: bool = False
     ):
         return modifiers.to_flat(
-            self, prefix=prefix, sep=sep, inplace=inplace
+            self, prefix=prefix, sep=sep, inplace=inplace, mapping_type=Mapz
         )
 
     def __getitem__(self, item: Hashable) -> Any:
@@ -134,7 +141,7 @@ class Mapz(_DefaultMapz):
         self.set(attr, value)
 
     def __copy__(self):
-        return methods.clone(self)
+        return methods.clone(self, mapping_type=Mapz)
 
     def __deepcopy__(self, memo=None):
-        return methods.deepclone(self)
+        return methods.deepclone(self, mapping_type=Mapz)

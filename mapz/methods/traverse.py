@@ -43,6 +43,19 @@ def traverse(
     mapping_type=dict,
     **kwargs,
 ) -> Any:
+    """Traverse any object recursively.
+
+    We have to rely on the mapping type, because we can't safely determine it
+    ourselves. ``traverse`` can be used by Mapz to transform ``dict`` objects
+    however nested they might be into a ``Mapz`` object. That means repacking
+    every nested dict into a different mapping type.
+    Thus, we can't determine such mapping type from the ``arg`` and need to
+    rely on the explicit declaration of it.
+
+    Args:
+        mapping_type (class): Type to pack mapping objects into. Defaults
+            to ``dict``.
+    """
 
     if "_depth" not in kwargs:
         kwargs["_depth"] = 0

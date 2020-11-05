@@ -20,7 +20,7 @@ def data():
             {"ttl": 120, "flush": True},
             {frozenset({1, 2}): {1, 2}},
         ],
-        "name": "Boris"
+        "name": "Boris",
     }
 
 
@@ -78,7 +78,7 @@ def test_set(data):
 
 
 def test_set_item(data):
-    
+
     m = Mapz(data)
 
     m["users"] = ["Onotole"]
@@ -137,7 +137,7 @@ def test_shallow_copy(data):
     m.name = "Dorian"
     assert m.name == "Dorian"
     assert shallow.name == "Boris"
-    
+
 
 def test_deep_copy(data):
 
@@ -184,7 +184,6 @@ def test_flatten(data):
 
 
 def test_map(data):
-
     def keypartswap(*args, **kwargs):
         k, v = args
         if k:
@@ -201,6 +200,6 @@ def test_map(data):
     assert m.basesdata.b1d.stho == "localhost"
 
     result = m.map()
-    
+
     m.basesdata.b1d.stho = "127.0.0.1"
     assert result.basesdata.b1d.stho == "localhost"

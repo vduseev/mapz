@@ -10,6 +10,7 @@ def merge(
     key_sep: str = "__",
     merge_method: str = "recursive",
     merge_inverse: bool = False,
+    mapping_type=dict,
 ) -> MutableMapping:
 
     # Collect all key-value pairs from mappings and keyword arguments
@@ -29,7 +30,7 @@ def merge(
             key_sep=key_sep,
             merge_method=merge_method,
             merge_inverse=merge_inverse,
-            mapping_type=type(data),
+            mapping_type=mapping_type,
         )
 
     return data
