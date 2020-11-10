@@ -128,6 +128,11 @@ class Mapz(_DefaultMapz):
             self, prefix=prefix, sep=sep, inplace=inplace, mapping_type=Mapz
         )
 
+    def to_dict(
+        self, inplace: bool = False
+    ):
+        return modifiers.to_dict(self, inplace=inplace)
+
     def __getitem__(self, item: Hashable) -> Any:
         return self.get(item)
 
