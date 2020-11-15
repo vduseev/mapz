@@ -21,11 +21,15 @@ STR_TYPES = (str, bytes, bytearray)
 # [not-sequence-types]
 
 
+def ismapping(arg: Any) -> bool:
+    return isinstance(arg, Mapping)
+
+
 def issequence(arg: Any) -> bool:
     return isinstance(arg, Sequence) and not isinstance(arg, STR_TYPES)
 
 
-def iskwresult(result: Any) -> bool:
+def iskvresult(result: Any) -> bool:
     return (
         result is not None and isinstance(result, tuple) and len(result) == 2
     )
@@ -61,23 +65,37 @@ def traverse(
         kwargs["_depth"] = 0
     kwargs["_depth"] += 1
 
+    if "_index" not in kwargs:
+        kwargs["_index"] = 0
+
+    if "_ancestors" not in kwargs:
+        kwargs["_ancestors"] = []
+    else:
+        # Have to clone ancestor list here, because otherwise the list
+        # will share single instance between all traversals.
+        # Instead, it should split into as many copies as needed. Each for
+        # its own traversal path.
+        kwargs["_ancestors"] = [a for a in kwargs["_ancestors"]] + [arg]
+
     result = None
 
-    if isinstance(arg, Mapping):
+    if ismapping(arg):
         # This branch always returns mapping
         d = mapping_type()
 
         keys = key_order(arg.keys())
-        for k in keys:
+        for idx, k in enumerate(keys):
             v = arg[k]
+
+            kwargs["_index"] = idx
 
             # At this point, ``func``` can transform both ``k`` and ``v``
             # to anything, even to None. Or turn ``v`` into a plain value.
             result = func(k, v, **kwargs)
-            if iskwresult(result):
+            if iskvresult(result):
                 k, v = result
 
-            if isinstance(v, Mapping) or issequence(v):
+            if ismapping(v) or issequence(v):
                 v = traverse(
                     v,
                     func,
@@ -96,13 +114,15 @@ def traverse(
         l = list()
 
         items = list_order(arg)
-        for i in items:
+        for idx, i in enumerate(items):
+
+            kwargs["_index"] = idx
 
             result = func(None, i, **kwargs)
-            if iskwresult(result):
+            if iskvresult(result):
                 k, i = result
 
-            if isinstance(i, Mapping) or issequence(i):
+            if ismapping(i) or issequence(i):
                 i = traverse(
                     i,
                     func,
@@ -122,7 +142,7 @@ def traverse(
         # ``arg`` itself if there were no results.
         result = func(None, arg, **kwargs)
 
-        if iskwresult(result):
+        if iskvresult(result):
             k, v = result
             return v
         else:

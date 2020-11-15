@@ -22,7 +22,9 @@ def test_simple(data_map):
         ["  connection", ""],
         ["    host", "localhost"],
         ["    port", "5432"],
-        ["  users", str(data_map["database"]["users"])],
+        ["  users", ""],
+        ["    -", "Duhast"],
+        ["    -", "Valera"],
     ]
 
 

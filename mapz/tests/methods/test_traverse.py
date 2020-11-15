@@ -2,7 +2,7 @@ from typing import Mapping
 from mapz.methods.traverse import (
     traverse,
     isinstresult,
-    iskwresult,
+    iskvresult,
     issequence,
 )
 
@@ -18,13 +18,13 @@ def test_issequence():
 
 def test_iskwresult():
 
-    assert iskwresult(None) is False
+    assert iskvresult(None) is False
 
-    assert iskwresult([1]) is False
+    assert iskvresult([1]) is False
 
-    assert iskwresult((1,)) is False
+    assert iskvresult((1,)) is False
 
-    assert iskwresult((1, 2)) is True
+    assert iskvresult((1, 2)) is True
 
 
 def test_isinstresult():

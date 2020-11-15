@@ -183,7 +183,7 @@ def test_flatten(data):
     assert flat["f_databases.db1.host"] == "localhost"
 
 
-def test_map(data):
+def test_to_dict(data):
     def keypartswap(*args, **kwargs):
         k, v = args
         if k:
@@ -203,3 +203,24 @@ def test_map(data):
 
     m.basesdata.b1d.stho = "127.0.0.1"
     assert result.basesdata.b1d.stho == "localhost"
+
+
+def test_to_table(data):
+
+    m = Mapz(data)
+    headers, rows = m.to_table()
+        
+    assert rows == [
+        ["Params", ""],
+        ["  - flush", "True"],
+        ["    ttl", "120"],
+        ["  - frozenset({1, 2})", "{1, 2}"],
+        ["databases", ""],
+        ["  db1", ""],
+        ["    host", "localhost"],
+        ["    port", "5432"],
+        ["name", "Boris"],
+        ["users", ""],
+        ["  -", "Duhast"],
+        ["  -", "Valera"],
+    ]

@@ -4,12 +4,7 @@ from mapz.modifiers.mapping import to_dict
 
 
 def test_to_dict():
-    d = {
-        "database": {
-            "host": "localhost",
-            "port": 1234
-        }
-    }
+    d = {"database": {"host": "localhost", "port": 1234}}
 
     m = Mapz(d)
 
@@ -26,4 +21,4 @@ def test_to_dict():
 
     # Same but inplace
     m.to_dict(inplace=True)
-    check_type(m)    
+    check_type(m)

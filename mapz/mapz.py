@@ -1,8 +1,7 @@
-from mapz.methods.apply import apply
 import mapz.methods as methods
 import mapz.modifiers as modifiers
 
-from typing import Any, Hashable, Mapping
+from typing import Any, Hashable, Mapping, List
 
 
 class _DefaultMapz(dict):
@@ -128,10 +127,18 @@ class Mapz(_DefaultMapz):
             self, prefix=prefix, sep=sep, inplace=inplace, mapping_type=Mapz
         )
 
-    def to_dict(
-        self, inplace: bool = False
-    ):
+    def to_dict(self, inplace: bool = False):
         return modifiers.to_dict(self, inplace=inplace)
+
+    def to_table(
+        self,
+        headers: List[str] = ["Key", "Value"],
+        indentation: str = "  ",
+        limit: int = 0,
+    ):
+        return modifiers.to_table(
+            self, headers=headers, indentation=indentation, limit=limit
+        )
 
     def __getitem__(self, item: Hashable) -> Any:
         return self.get(item)
