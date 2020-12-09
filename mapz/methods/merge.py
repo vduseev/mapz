@@ -1,22 +1,23 @@
 from .put import put
 
-from typing import Mapping, Hashable, Any, MutableMapping
+from typing import Dict, List, Mapping, Hashable, Any, MutableMapping, Tuple, Type
 
 
 def merge(
-    data: MutableMapping,
+    data: Dict[Hashable, Any],
     *mappings: Mapping[Hashable, Any],
     key_prefix: str = "",
     key_sep: str = "__",
     merge_method: str = "recursive",
     merge_inverse: bool = False,
-    mapping_type=dict,
-) -> MutableMapping:
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
+) -> Dict[Hashable, Any]:
 
     # Collect all key-value pairs from mappings and keyword arguments
     # into a single ordered list with last element having the highest
     # priority.
-    items = []
+    items: List[Tuple[Hashable, Any]] = []
+
     # From mappings
     for mapping in mappings:
         items += mapping.items()

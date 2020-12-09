@@ -1,11 +1,11 @@
 from mapz.methods.apply import apply
 
-from typing import Mapping, MutableMapping, Union
+from typing import Any, Dict, Hashable, Mapping, MutableMapping, Type, Union
 
 
 def to_lowercase(
-    data: Union[Mapping, MutableMapping], inplace=False, mapping_type=dict
-):
+    data: Dict[Hashable, Any], inplace: bool = False, mapping_type: Type[Dict[Hashable, Any]] = dict
+) -> Dict[Hashable, Any]:
     """Lowercase all string keys of the configuration"""
 
     return apply(
@@ -20,8 +20,8 @@ def to_lowercase(
 
 
 def to_uppercase(
-    data: Union[Mapping, MutableMapping], inplace=False, mapping_type=dict
-):
+    data: Dict[Hashable, Any], inplace: bool = False, mapping_type: Type[Dict[Hashable, Any]] = dict
+) -> Dict[Hashable, Any]:
     """Uppercase all string keys of the configuration"""
 
     return apply(
