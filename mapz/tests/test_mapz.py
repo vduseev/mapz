@@ -209,7 +209,7 @@ def test_to_table(data):
 
     m = Mapz(data)
     headers, rows = m.to_table()
-        
+
     assert rows == [
         ["Params", ""],
         ["  - flush", "True"],

@@ -1,15 +1,15 @@
 from .traverse import traverse, TraverseModificatorCallable
 
-from typing import Mapping, MutableMapping, Union
+from typing import Any, Dict, Hashable, Mapping, MutableMapping, Type, Union, cast
 
 
 def apply(
-    data: Union[Mapping, MutableMapping],
-    modificator: TraverseModificatorCallable = lambda *args, **kwargs: args,
+    data: Dict[Hashable, Any],
+    modificator: TraverseModificatorCallable = lambda k, v, **kwargs: (k, v),
     inplace: bool = False,
-    mapping_type=dict,
-    **kwargs
-):
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
+    **kwargs: Any
+) -> Dict[Hashable, Any]:
     d = traverse(data, modificator, mapping_type=mapping_type, **kwargs)
 
     if inplace:
@@ -17,4 +17,4 @@ def apply(
         data.update(d)
         d = data
 
-    return d
+    return cast(Dict[Hashable, Any], d)

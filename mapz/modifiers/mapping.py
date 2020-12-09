@@ -1,16 +1,19 @@
 from mapz.methods.traverse import traverse
 
-from typing import Union, Mapping, MutableMapping
+from typing import Hashable, Union, Mapping, MutableMapping, Dict, Any, cast
 
 
-def to_dict(data: Union[Mapping, MutableMapping], inplace=False):
-    """Lowercase all string keys of the configuration"""
+def to_dict(
+    data: Dict[Hashable, Any], inplace: bool = False
+) -> Dict[Hashable, Any]:
 
-    d = traverse(data)
+    d = traverse(data, mapping_type=dict)
 
     if inplace:
         data.clear()
         data.update(d)
         d = data
 
-    return d
+    # Explicit cast here because otherwise mypy complains that 'traverse' returns Any,
+    # thus 'd' also evaluates to Any, and 'to_dict' returns Dict.
+    return cast(Dict[Hashable, Any], d)

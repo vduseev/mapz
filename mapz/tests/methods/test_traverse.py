@@ -1,7 +1,6 @@
 from typing import Mapping
 from mapz.methods.traverse import (
     traverse,
-    isinstresult,
     iskvresult,
     issequence,
 )
@@ -25,13 +24,6 @@ def test_iskwresult():
     assert iskvresult((1,)) is False
 
     assert iskvresult((1, 2)) is True
-
-
-def test_isinstresult():
-
-    assert isinstresult(None) is False
-
-    assert isinstresult((1,)) is True
 
 
 duhast = {

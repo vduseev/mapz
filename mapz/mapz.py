@@ -1,15 +1,22 @@
-import mapz.methods as methods
-import mapz.modifiers as modifiers
+from mapz import methods, modifiers
 
-from typing import Any, Hashable, Mapping, List
+from typing import (
+    Any,
+    Collection,
+    Hashable,
+    Iterable,
+    Mapping,
+    List,
+    Dict,
+    Union,
+)
 
 
-class _DefaultMapz(dict):
-    def __repr__(self) -> str:
-        return f"MapZ{dict.__repr__(self)}"
+class ProtoMapz(dict):
+    pass
 
 
-class Mapz(_DefaultMapz):
+class Mapz(ProtoMapz):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
         self.merge(*args, {k: v for k, v in kwargs.items()})
@@ -17,10 +24,10 @@ class Mapz(_DefaultMapz):
     def get(
         self,
         address: Hashable,
-        default: Any = _DefaultMapz(),
+        default: Any = ProtoMapz(),
         sep: str = ".",
     ):
-        if type(default) == _DefaultMapz:
+        if type(default) == ProtoMapz:
             default = Mapz()
 
         return methods.get(
@@ -51,7 +58,11 @@ class Mapz(_DefaultMapz):
             mapping_type=Mapz,
         )
 
-    def update(self, data: Mapping, method: str = "recursive"):
+    def update(
+        self,
+        data: Union[Dict[Hashable, Any], Iterable[Collection[Any]]],
+        method: str = "recursive",
+    ):
         return methods.overwrite(
             dest=self,
             data=data,
@@ -78,7 +89,7 @@ class Mapz(_DefaultMapz):
 
     def submerge(
         self,
-        *mappings: Mapping[Hashable, Any],
+        *mappings: Dict[Hashable, Any],
         key_prefix: str = "",
         key_sep: str = "__",
         merge_method: str = "recursive",
@@ -97,7 +108,7 @@ class Mapz(_DefaultMapz):
         self,
         modificator: methods.TraverseModificatorCallable = lambda *args, **kwargs: args,
         inplace: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ):
         return methods.apply(
             data=self,
@@ -132,7 +143,7 @@ class Mapz(_DefaultMapz):
 
     def to_table(
         self,
-        headers: List[str] = ["Key", "Value"],
+        headers: Iterable[str] = ["Key", "Value"],
         indentation: str = "  ",
         limit: int = 0,
     ):
@@ -152,8 +163,11 @@ class Mapz(_DefaultMapz):
     def __setattr__(self, attr: str, value: Any) -> None:
         self.set(attr, value)
 
-    def __copy__(self):
+    def __copy__(self) -> "Mapz":
         return methods.clone(self, mapping_type=Mapz)
 
-    def __deepcopy__(self, memo=None):
+    def __deepcopy__(self, memo=None) -> "Mapz":
         return methods.deepclone(self, mapping_type=Mapz)
+
+    def __repr__(self) -> str:
+        return f"MapZ{dict.__repr__(self)}"

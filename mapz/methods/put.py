@@ -1,4 +1,4 @@
-from typing import MutableMapping, Hashable, Any
+from typing import Dict, MutableMapping, Hashable, Any, Type
 
 from .splitkey import splitkey, SplitkeyModificatorCallable
 from .traverse import traverse, TraverseModificatorCallable
@@ -6,16 +6,19 @@ from .overwrite import overwrite
 
 
 def put(
-    data: MutableMapping,
+    data: Dict[Hashable, Any],
     key: Hashable,
     val: Any,
     key_prefix: str = "",
     key_sep: str = ".",
     key_modificator: SplitkeyModificatorCallable = lambda key, parts: parts,
-    val_modificator: TraverseModificatorCallable = lambda *args, **kwargs: args,
+    val_modificator: TraverseModificatorCallable = lambda k, v, **kwargs: (
+        k,
+        v,
+    ),
     merge_method: str = "recursive",
     merge_inverse: bool = False,
-    mapping_type=dict,
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Any:
 
     key_parts = splitkey(

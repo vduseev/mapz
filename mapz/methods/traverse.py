@@ -1,16 +1,25 @@
 from typing import (
     Any,
     Callable,
+    Hashable,
+    Iterable,
     List,
-    MutableMapping,
+    Dict,
     Sequence,
     Mapping,
     Tuple,
+    Type,
+    Optional,
     Union,
 )
+from mypy_extensions import Arg, VarArg, KwArg
 
 
-TraverseModificatorCallable = Callable[..., Union[None, Tuple[Any, Any]]]
+TraverseModificatorCallable = Callable[
+    [Arg(Any, "k"), Arg(Any, "v"), KwArg(Any)],
+    Optional[Tuple[Any, Any]]
+    # [Any, Any, KwArg(Any)], Union[None, Tuple[Any, ...]]
+]
 OrderingCallable = Callable[[Sequence], List]
 
 
@@ -29,23 +38,17 @@ def issequence(arg: Any) -> bool:
     return isinstance(arg, Sequence) and not isinstance(arg, STR_TYPES)
 
 
-def iskvresult(result: Any) -> bool:
-    return (
-        result is not None and isinstance(result, tuple) and len(result) == 2
-    )
-
-
-def isinstresult(result: Any) -> bool:
-    return result is not None
+def iskvresult(result: Optional[Tuple[Any, ...]]) -> bool:
+    return isinstance(result, tuple) and len(result) == 2
 
 
 def traverse(
     arg: Any,
-    func: TraverseModificatorCallable = lambda *args, **kwargs: args,
+    func: TraverseModificatorCallable = lambda k, v, **kwargs: (k, v),
     key_order: OrderingCallable = lambda keys: list(keys),
     list_order: OrderingCallable = lambda items: list(items),
-    mapping_type=dict,
-    **kwargs,
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
+    **kwargs: Any,
 ) -> Any:
     """Traverse any object recursively.
 
@@ -77,7 +80,7 @@ def traverse(
         # its own traversal path.
         kwargs["_ancestors"] = [a for a in kwargs["_ancestors"]] + [arg]
 
-    result = None
+    result: Optional[Tuple[Any, ...]] = None
 
     if ismapping(arg):
         # This branch always returns mapping
@@ -92,7 +95,7 @@ def traverse(
             # At this point, ``func``` can transform both ``k`` and ``v``
             # to anything, even to None. Or turn ``v`` into a plain value.
             result = func(k, v, **kwargs)
-            if iskvresult(result):
+            if result is not None and iskvresult(result):
                 k, v = result
 
             if ismapping(v) or issequence(v):
@@ -111,7 +114,7 @@ def traverse(
 
     elif issequence(arg):
         # This branch always returns sequence of the same type as ``arg``.
-        l = list()
+        l: List[Any] = list()
 
         items = list_order(arg)
         for idx, i in enumerate(items):
@@ -119,7 +122,7 @@ def traverse(
             kwargs["_index"] = idx
 
             result = func(None, i, **kwargs)
-            if iskvresult(result):
+            if result is not None and iskvresult(result):
                 k, i = result
 
             if ismapping(i) or issequence(i):
@@ -142,7 +145,7 @@ def traverse(
         # ``arg`` itself if there were no results.
         result = func(None, arg, **kwargs)
 
-        if iskvresult(result):
+        if result is not None and iskvresult(result):
             k, v = result
             return v
         else:

@@ -1,7 +1,9 @@
 from typing import Callable, Hashable, List
 
 
-SplitkeyModificatorCallable = Callable[[Hashable, List[str]], List[str]]
+SplitkeyModificatorCallable = Callable[
+    [Hashable, List[Hashable]], List[Hashable]
+]
 
 
 def splitkey(
