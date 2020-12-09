@@ -4,7 +4,9 @@ from typing import Any, Dict, Hashable, Mapping, MutableMapping, Type, Union
 
 
 def to_lowercase(
-    data: Dict[Hashable, Any], inplace: bool = False, mapping_type: Type[Dict[Hashable, Any]] = dict
+    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    inplace: bool = False,
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
     """Lowercase all string keys of the configuration"""
 
@@ -20,7 +22,9 @@ def to_lowercase(
 
 
 def to_uppercase(
-    data: Dict[Hashable, Any], inplace: bool = False, mapping_type: Type[Dict[Hashable, Any]] = dict
+    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    inplace: bool = False,
+    mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
     """Uppercase all string keys of the configuration"""
 

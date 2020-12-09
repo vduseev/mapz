@@ -1,6 +1,15 @@
 from .put import put
 
-from typing import Dict, List, Mapping, Hashable, Any, MutableMapping, Tuple, Type
+from typing import (
+    Dict,
+    List,
+    Mapping,
+    Hashable,
+    Any,
+    MutableMapping,
+    Tuple,
+    Type,
+)
 
 
 def merge(

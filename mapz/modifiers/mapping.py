@@ -4,12 +4,13 @@ from typing import Hashable, Union, Mapping, MutableMapping, Dict, Any, cast
 
 
 def to_dict(
-    data: Dict[Hashable, Any], inplace: bool = False
+    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    inplace: bool = False,
 ) -> Dict[Hashable, Any]:
 
     d = traverse(data, mapping_type=dict)
 
-    if inplace:
+    if isinstance(data, Dict) and inplace:
         data.clear()
         data.update(d)
         d = data

@@ -1,8 +1,9 @@
-from typing import Dict, Any, Hashable, Mapping, Type
+from typing import Dict, Any, Hashable, Mapping, Type, Union
+from types import MappingProxyType
 
 
 def to_flat(
-    data: Dict[Hashable, Any],
+    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
     prefix: str = "",
     sep: str = ".",
     inplace: bool = False,
@@ -14,18 +15,19 @@ def to_flat(
 
     p = f"{prefix}" if prefix else ""
     for key in data:
-        if isinstance(dict.__getitem__(data, key), Dict):
+        v = MappingProxyType(data).__getitem__(key)
+        if isinstance(v, Mapping):
             flattened = to_flat(
-                dict.__getitem__(data, key),
+                v,
                 prefix=f"{p}{key}{sep}",
                 sep=sep,
                 mapping_type=mapping_type,
             )
             d.update(flattened)
         else:
-            dict.__setitem__(d, f"{p}{key}", dict.__getitem__(data, key))
+            dict.__setitem__(d, f"{p}{key}", v)
 
-    if inplace:
+    if isinstance(data, Dict) and inplace:
         data.clear()
         data.update(d)
         d = data

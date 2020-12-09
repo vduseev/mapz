@@ -1,3 +1,4 @@
+from mapz.modifiers.table import HeaderType
 from mapz import methods, modifiers
 
 from typing import (
@@ -7,17 +8,18 @@ from typing import (
     Iterable,
     Mapping,
     List,
-    Dict,
+    Dict, Optional,
+    Tuple,
     Union,
 )
 
 
-class ProtoMapz(dict):
+class ProtoMapz(Dict[Hashable, Any]):
     pass
 
 
 class Mapz(ProtoMapz):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Mapping[Hashable, Any], **kwargs: Any) -> None:
         super().__init__()
         self.merge(*args, {k: v for k, v in kwargs.items()})
 
@@ -26,7 +28,7 @@ class Mapz(ProtoMapz):
         address: Hashable,
         default: Any = ProtoMapz(),
         sep: str = ".",
-    ):
+    ) -> Any:
         if type(default) == ProtoMapz:
             default = Mapz()
 
@@ -41,10 +43,13 @@ class Mapz(ProtoMapz):
         key_prefix: str = "",
         key_sep: str = ".",
         key_modificator: methods.SplitkeyModificatorCallable = lambda key, parts: parts,
-        val_modificator: methods.TraverseModificatorCallable = lambda *args, **kwargs: args,
+        val_modificator: methods.TraverseModificatorCallable = lambda k, v, **kwargs: (
+            k,
+            v,
+        ),
         merge_method: str = "recursive",
         merge_inverse: bool = False,
-    ):
+    ) -> Dict[Hashable, Any]:
         return methods.put(
             data=self,
             key=key,
@@ -58,11 +63,20 @@ class Mapz(ProtoMapz):
             mapping_type=Mapz,
         )
 
-    def update(
+    def update( # type: ignore
         self,
-        data: Union[Dict[Hashable, Any], Iterable[Collection[Any]]],
+        data: Mapping[Hashable, Any],
         method: str = "recursive",
-    ):
+    ) -> Dict[Hashable, Any]:
+        # Intentionally incompatible with 'update' method of dict and MutableMapping.
+        # The reason for is the requirement to return a Dict instead of None.
+        # We want to be able to chain function calls via dot like this:
+        #   my_map.to_lower().to_upper().update(this_dict).merge(whatever)
+        # and it instantly violates return type of 'update' because for dict and
+        # MutableMapping it must return None.
+        # So, why bother with implementing compatibility with Iterable[Tuple[Any, Any]]
+        # and **kwargs at all.
+        # See mypy issue: https://github.com/python/mypy/issues/4250
         return methods.overwrite(
             dest=self,
             data=data,
@@ -76,7 +90,7 @@ class Mapz(ProtoMapz):
         key_sep: str = "__",
         merge_method: str = "recursive",
         merge_inverse: bool = False,
-    ):
+    ) -> Dict[Hashable, Any]:
         return methods.merge(
             self,
             *mappings,
@@ -89,11 +103,11 @@ class Mapz(ProtoMapz):
 
     def submerge(
         self,
-        *mappings: Dict[Hashable, Any],
+        *mappings: Mapping[Hashable, Any],
         key_prefix: str = "",
         key_sep: str = "__",
         merge_method: str = "recursive",
-    ):
+    ) -> Dict[Hashable, Any]:
         return methods.merge(
             self,
             *mappings,
@@ -106,10 +120,13 @@ class Mapz(ProtoMapz):
 
     def map(
         self,
-        modificator: methods.TraverseModificatorCallable = lambda *args, **kwargs: args,
+        modificator: methods.TraverseModificatorCallable = lambda k, v, **kwargs: (
+            k,
+            v,
+        ),
         inplace: bool = False,
         **kwargs: Any,
-    ):
+    ) -> Dict[Hashable, Any]:
         return methods.apply(
             data=self,
             modificator=modificator,
@@ -118,35 +135,35 @@ class Mapz(ProtoMapz):
             **kwargs,
         )
 
-    def copy(self):
+    def copy(self) -> Dict[Hashable, Any]:
         return methods.deepclone(self, mapping_type=Mapz)
 
-    def lower(self, inplace: bool = False):
+    def lower(self, inplace: bool = False) -> Dict[Hashable, Any]:
         return modifiers.to_lowercase(
             self, inplace=inplace, mapping_type=Mapz
         )
 
-    def upper(self, inplace: bool = False):
+    def upper(self, inplace: bool = False) -> Dict[Hashable, Any]:
         return modifiers.to_uppercase(
             self, inplace=inplace, mapping_type=Mapz
         )
 
     def flatten(
         self, prefix: str = "", sep: str = ".", inplace: bool = False
-    ):
+    ) -> Dict[Hashable, Any]:
         return modifiers.to_flat(
             self, prefix=prefix, sep=sep, inplace=inplace, mapping_type=Mapz
         )
 
-    def to_dict(self, inplace: bool = False):
+    def to_dict(self, inplace: bool = False) -> Dict[Hashable, Any]:
         return modifiers.to_dict(self, inplace=inplace)
 
     def to_table(
         self,
-        headers: Iterable[str] = ["Key", "Value"],
+        headers: modifiers.HeaderType = ["Key", "Value"],
         indentation: str = "  ",
         limit: int = 0,
-    ):
+    ) -> modifiers.TableType:
         return modifiers.to_table(
             self, headers=headers, indentation=indentation, limit=limit
         )
@@ -163,10 +180,10 @@ class Mapz(ProtoMapz):
     def __setattr__(self, attr: str, value: Any) -> None:
         self.set(attr, value)
 
-    def __copy__(self) -> "Mapz":
+    def __copy__(self) -> Dict[Hashable, Any]:
         return methods.clone(self, mapping_type=Mapz)
 
-    def __deepcopy__(self, memo=None) -> "Mapz":
+    def __deepcopy__(self, memo: Optional[Dict[Hashable, Any]] = None) -> Dict[Hashable, Any]:
         return methods.deepclone(self, mapping_type=Mapz)
 
     def __repr__(self) -> str:

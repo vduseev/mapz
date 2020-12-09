@@ -5,16 +5,17 @@ from mapz.methods.traverse import (
     TraverseModificatorCallable,
 )
 
-from typing import Any, Hashable, Mapping, List, Optional, Tuple
+from typing import Any, Hashable, Iterable, Mapping, List, Optional, Tuple
 
 
-RowType = List[str]
-TableType = Tuple[RowType, List[RowType]]
+RowType = Iterable[str]
+HeaderType = RowType
+TableType = Tuple[HeaderType, List[RowType]]
 
 
 def to_table(
     data: Mapping[Hashable, Any],
-    headers: List[str] = ["Key", "Value"],
+    headers: Iterable[str] = ["Key", "Value"],
     indentation: str = "  ",
     limit: int = 0,
 ) -> TableType:

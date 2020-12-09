@@ -1,7 +1,7 @@
-from .case import to_lowercase, to_uppercase
-from .flatten import to_flat
-from .table import to_table
-from .mapping import to_dict
+from .case import to_lowercase as to_lowercase, to_uppercase as to_uppercase
+from .flatten import to_flat as to_flat
+from .table import to_table as to_table, RowType as RowType, HeaderType as HeaderType, TableType as TableType
+from .mapping import to_dict as to_dict
 
 
 # __all__ = [

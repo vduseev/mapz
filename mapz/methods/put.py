@@ -19,14 +19,14 @@ def put(
     merge_method: str = "recursive",
     merge_inverse: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
-) -> Any:
+) -> Dict[Hashable, Any]:
 
     key_parts = splitkey(
         key, prefix=key_prefix, sep=key_sep, modificator=key_modificator
     )
     value = traverse(val, val_modificator, mapping_type=mapping_type)
 
-    # Build dict from list of key parts and the value
+    # Build dict in reverse order from list of key parts and the value
     result = value
     while key_parts:
         k = key_parts.pop()
