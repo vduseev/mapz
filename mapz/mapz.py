@@ -8,7 +8,8 @@ from typing import (
     Iterable,
     Mapping,
     List,
-    Dict, Optional,
+    Dict,
+    Optional,
     Tuple,
     Union,
 )
@@ -63,7 +64,7 @@ class Mapz(ProtoMapz):
             mapping_type=Mapz,
         )
 
-    def update( # type: ignore
+    def update(  # type: ignore
         self,
         data: Mapping[Hashable, Any],
         method: str = "recursive",
@@ -183,7 +184,9 @@ class Mapz(ProtoMapz):
     def __copy__(self) -> Dict[Hashable, Any]:
         return methods.clone(self, mapping_type=Mapz)
 
-    def __deepcopy__(self, memo: Optional[Dict[Hashable, Any]] = None) -> Dict[Hashable, Any]:
+    def __deepcopy__(
+        self, memo: Optional[Dict[Hashable, Any]] = None
+    ) -> Dict[Hashable, Any]:
         return methods.deepclone(self, mapping_type=Mapz)
 
     def __repr__(self) -> str:

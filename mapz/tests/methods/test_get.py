@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from mapz.methods.get import get, getsert
 
 
@@ -18,7 +19,7 @@ d = {"name": "Duhast"}
 l = [1, True, 4, {"a", "b"}, "text"]
 
 # Nested dict, with list and dict
-nd = dict(d)
+nd: Dict[str, Any] = dict(d)
 nd["l"] = list(l) + [dict(d)]
 nd["d"] = dict(d, l=list(l))
 
