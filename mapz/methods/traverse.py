@@ -2,7 +2,6 @@ from typing import (
     Any,
     Callable,
     Hashable,
-    Iterable,
     List,
     Dict,
     Sequence,
@@ -10,15 +9,12 @@ from typing import (
     Tuple,
     Type,
     Optional,
-    Union,
 )
-from mypy_extensions import Arg, VarArg, KwArg
+from mypy_extensions import Arg, KwArg
 
 
-TraverseModificatorCallable = Callable[
-    [Arg(Any, "k"), Arg(Any, "v"), KwArg(Any)],
-    Optional[Tuple[Any, Any]]
-    # [Any, Any, KwArg(Any)], Union[None, Tuple[Any, ...]]
+TraverseVisitorCallable = Callable[
+    [Arg(Any, "k"), Arg(Any, "v"), KwArg(Any)], Optional[Tuple[Any, Any]]
 ]
 OrderingCallable = Callable[[Sequence], List]
 
@@ -44,7 +40,7 @@ def iskvtuple(arg: Optional[Tuple[Any, ...]]) -> bool:
 
 def traverse(
     arg: Any,
-    func: TraverseModificatorCallable = lambda k, v, **kwargs: (k, v),
+    visitor: TraverseVisitorCallable = lambda k, v, **kwargs: (k, v),
     key_order: OrderingCallable = lambda keys: list(keys),
     list_order: OrderingCallable = lambda items: list(items),
     mapping_type: Type[Dict[Hashable, Any]] = dict,
@@ -94,14 +90,14 @@ def traverse(
 
             # At this point, ``func``` can transform both ``k`` and ``v``
             # to anything, even to None. Or turn ``v`` into a plain value.
-            result = func(k, v, **kwargs)
+            result = visitor(k, v, **kwargs)
             if result is not None and iskvtuple(result):
                 k, v = result
 
             if ismapping(v) or issequence(v):
                 v = traverse(
                     v,
-                    func,
+                    visitor,
                     key_order=key_order,
                     list_order=list_order,
                     mapping_type=mapping_type,
@@ -121,14 +117,14 @@ def traverse(
 
             kwargs["_index"] = idx
 
-            result = func(None, i, **kwargs)
+            result = visitor(None, i, **kwargs)
             if result is not None and iskvtuple(result):
                 k, i = result
 
             if ismapping(i) or issequence(i):
                 i = traverse(
                     i,
-                    func,
+                    visitor,
                     key_order=key_order,
                     list_order=list_order,
                     mapping_type=mapping_type,
@@ -143,7 +139,7 @@ def traverse(
     else:
         # This branch returns whatever results we get from ``func`` or
         # ``arg`` itself if there were no results.
-        result = func(None, arg, **kwargs)
+        result = visitor(None, arg, **kwargs)
 
         if result is not None and iskvtuple(result):
             k, v = result

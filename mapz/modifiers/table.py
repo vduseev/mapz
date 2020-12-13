@@ -2,7 +2,6 @@ from mapz.methods.traverse import (
     ismapping,
     traverse,
     issequence,
-    TraverseModificatorCallable,
 )
 
 from typing import Any, Hashable, Iterable, Mapping, List, Optional, Tuple
@@ -14,7 +13,7 @@ TableType = Tuple[HeaderType, List[RowType]]
 
 
 def to_table(
-    data: Mapping[Hashable, Any],
+    mapping: Mapping[Hashable, Any],
     headers: Iterable[str] = ["Key", "Value"],
     indentation: str = "  ",
     limit: int = 0,
@@ -29,17 +28,17 @@ def to_table(
 
         rows = kwargs["rows"]
         limit = kwargs["limit"]
-        _depth = kwargs["_depth"]
-        _index = kwargs["_index"]
-        _ancestors = kwargs["_ancestors"]
+        depth = kwargs["_depth"]
+        index = kwargs["_index"]
+        ancestors = kwargs["_ancestors"]
 
         # Render keys by default as:
-        table_key = indentation * (_depth - 1) + str(k)
+        table_key = indentation * (depth - 1) + str(k)
 
         if (
-            len(_ancestors) > 1
-            and ismapping(_ancestors[-1])
-            and issequence(_ancestors[-2])
+            len(ancestors) > 1
+            and ismapping(ancestors[-1])
+            and issequence(ancestors[-2])
         ):
             # If node has two or more ancestors, then check if it's a
             # mapping within a list. Because in that case it must be
@@ -47,14 +46,14 @@ def to_table(
             # my_list
             #   - key1      value1
             #     key2      value2
-            if _index:
-                table_key = indentation * (_depth - 1) + str(k)
+            if index:
+                table_key = indentation * (depth - 1) + str(k)
             else:
-                table_key = indentation * (_depth - 2) + "- " + str(k)
+                table_key = indentation * (depth - 2) + "- " + str(k)
 
-        elif _ancestors and issequence(_ancestors[-1]):
+        elif ancestors and issequence(ancestors[-1]):
             # Render child items of lists as just a dash with proper indent
-            table_key = indentation * (_depth - 1) + "-"
+            table_key = indentation * (depth - 1) + "-"
 
         if not limit or limit and len(rows) < limit:
 
@@ -76,8 +75,8 @@ def to_table(
 
     rows: List[RowType] = []
     traverse(
-        data,
-        func=builder,
+        mapping,
+        visitor=builder,
         key_order=lambda keys: sorted(keys),
         rows=rows,
         limit=limit,

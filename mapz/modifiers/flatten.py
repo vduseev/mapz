@@ -3,7 +3,7 @@ from types import MappingProxyType
 
 
 def to_flat(
-    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    mapping: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
     prefix: str = "",
     sep: str = ".",
     inplace: bool = False,
@@ -14,8 +14,8 @@ def to_flat(
     d = mapping_type()
 
     p = f"{prefix}" if prefix else ""
-    for key in data:
-        v = MappingProxyType(data).__getitem__(key)
+    for key in mapping:
+        v = MappingProxyType(mapping).__getitem__(key)
         if isinstance(v, Mapping):
             flattened = to_flat(
                 v,
@@ -27,9 +27,9 @@ def to_flat(
         else:
             dict.__setitem__(d, f"{p}{key}", v)
 
-    if isinstance(data, Dict) and inplace:
-        data.clear()
-        data.update(d)
-        d = data
+    if isinstance(mapping, Dict) and inplace:
+        mapping.clear()
+        mapping.update(d)
+        d = mapping
 
     return d

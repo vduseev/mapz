@@ -1,18 +1,18 @@
-from mapz.methods.apply import apply
+from mapz.methods.map import map as zmap
 
-from typing import Any, Dict, Hashable, Mapping, MutableMapping, Type, Union
+from typing import Any, Dict, Hashable, Mapping, Type, Union
 
 
 def to_lowercase(
-    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    mapping: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
     inplace: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
     """Lowercase all string keys of the configuration"""
 
-    return apply(
-        data,
-        modificator=lambda k, v, **kwargs: (
+    return zmap(
+        mapping,
+        visitor=lambda k, v, **kwargs: (
             k.lower() if isinstance(k, str) else k,
             v,
         ),
@@ -22,15 +22,15 @@ def to_lowercase(
 
 
 def to_uppercase(
-    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    mapping: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
     inplace: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
     """Uppercase all string keys of the configuration"""
 
-    return apply(
-        data,
-        modificator=lambda k, v, **kwargs: (
+    return zmap(
+        mapping,
+        visitor=lambda k, v, **kwargs: (
             k.upper() if isinstance(k, str) else k,
             v,
         ),

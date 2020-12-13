@@ -1,18 +1,18 @@
 from .get import get as get, getsert as getsert
 from .traverse import (
     traverse as traverse,
-    TraverseModificatorCallable as TraverseModificatorCallable,
+    TraverseVisitorCallable as TraverseVisitorCallable,
     OrderingCallable as OrderingCallable,
 )
-from .overwrite import overwrite as overwrite
-from .clone import clone as clone, deepclone as deepclone
+from .update import update as update
+from .copy import copy as copy, deepcopy as deepcopy
 from .splitkey import (
     splitkey as splitkey,
     SplitkeyModificatorCallable as SplitkeyModificatorCallable,
 )
-from .put import put as put
+from .set import set as set
 from .merge import merge as merge
-from .apply import apply as apply
+from .map import map as map
 
 
 # __all__ = [

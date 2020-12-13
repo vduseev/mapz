@@ -1,4 +1,4 @@
-from .put import put
+from .set import set as zset
 
 from typing import (
     Dict,
@@ -6,15 +6,14 @@ from typing import (
     Mapping,
     Hashable,
     Any,
-    MutableMapping,
     Tuple,
     Type,
 )
 
 
 def merge(
-    data: Dict[Hashable, Any],
-    *mappings: Mapping[Hashable, Any],
+    mapping: Dict[Hashable, Any],
+    *other: Mapping[Hashable, Any],
     key_prefix: str = "",
     key_sep: str = "__",
     merge_method: str = "recursive",
@@ -28,12 +27,12 @@ def merge(
     items: List[Tuple[Hashable, Any]] = []
 
     # From mappings
-    for mapping in mappings:
-        items += mapping.items()
+    for o in other:
+        items += o.items()
 
     for k, v in items:
-        put(
-            data,
+        zset(
+            mapping,
             k,
             v,
             key_prefix=key_prefix,
@@ -43,4 +42,4 @@ def merge(
             mapping_type=mapping_type,
         )
 
-    return data
+    return mapping

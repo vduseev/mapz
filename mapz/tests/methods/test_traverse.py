@@ -72,7 +72,7 @@ def test_immutable_traverse():
 
     visit_order = []
 
-    traverse(duhast, func=_on_kv, tracking_list=visit_order)
+    traverse(duhast, visitor=_on_kv, tracking_list=visit_order)
 
     assert visit_order == [
         ("person", "<dict>"),

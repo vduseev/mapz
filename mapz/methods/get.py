@@ -2,7 +2,7 @@ from typing import Dict, Optional, Union, List, Hashable, Any
 
 
 def getsert(
-    data: Dict[Hashable, Any], key: Hashable, default: Any = None
+    mapping: Dict[Hashable, Any], key: Hashable, default: Any = None
 ) -> Any:
     """Implements defaultdict.
 
@@ -40,16 +40,16 @@ def getsert(
         Nothing. This function is never supposed to raise anything.
     """
 
-    if isinstance(data, Dict):
+    if isinstance(mapping, Dict):
 
-        if key not in data:
+        if key not in mapping:
 
             # Do not insert default value into data if it's None.
             if default is None:
                 return None
-            dict.__setitem__(data, key, default)
+            dict.__setitem__(mapping, key, default)
 
-        return dict.__getitem__(data, key)
+        return dict.__getitem__(mapping, key)
 
     else:
 

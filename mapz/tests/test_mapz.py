@@ -126,17 +126,21 @@ def test_shallow_copy(data):
     from copy import copy
 
     m = Mapz(data)
-    shallow = copy(m)
+    shallow1 = copy(m)
+    shallow2 = m.copy()
+
 
     assert m.databases.db1.host == "localhost"
     m.databases.db1.host = "172.31.0.4"
     assert m.databases.db1.host == "172.31.0.4"
-    assert shallow.databases.db1.host == "172.31.0.4"
+    assert shallow1.databases.db1.host == "172.31.0.4"
+    assert shallow2.databases.db1.host == "172.31.0.4"
 
     assert m.name == "Boris"
     m.name = "Dorian"
     assert m.name == "Dorian"
-    assert shallow.name == "Boris"
+    assert shallow1.name == "Boris"
+    assert shallow2.name == "Boris"
 
 
 def test_deep_copy(data):
@@ -145,7 +149,7 @@ def test_deep_copy(data):
 
     m = Mapz(data)
     deep1 = deepcopy(m)
-    deep2 = m.copy()
+    deep2 = m.deepcopy()
 
     assert m.databases.db1.port == 5432
     m.databases.db1.port = 1234

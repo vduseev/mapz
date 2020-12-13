@@ -1,19 +1,19 @@
 from mapz.methods.traverse import traverse
 
-from typing import Hashable, Union, Mapping, MutableMapping, Dict, Any, cast
+from typing import Hashable, Union, Mapping, Dict, Any, cast
 
 
 def to_dict(
-    data: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
+    mapping: Union[Dict[Hashable, Any], Mapping[Hashable, Any]],
     inplace: bool = False,
 ) -> Dict[Hashable, Any]:
 
-    d = traverse(data, mapping_type=dict)
+    d = traverse(mapping, mapping_type=dict)
 
-    if isinstance(data, Dict) and inplace:
-        data.clear()
-        data.update(d)
-        d = data
+    if isinstance(mapping, Dict) and inplace:
+        mapping.clear()
+        mapping.update(d)
+        d = mapping
 
     # Explicit cast here because otherwise mypy complains that 'traverse' returns Any,
     # thus 'd' also evaluates to Any, and 'to_dict' returns Dict.
