@@ -1,3 +1,11 @@
+"""Mapz.
+
+Hierarchy of methods:
+
+get
+"""
+
+
 from mapz import methods, modifiers
 
 from typing import (
@@ -44,18 +52,18 @@ class Mapz(ProtoMapz):
             k,
             v,
         ),
-        merge_method: str = "recursive",
+        strategy: methods.Strategy = methods.Strategy.Deep,
         merge_inverse: bool = False,
     ) -> Dict[Hashable, Any]:
         return methods.set(
             mapping=self,
             key=key,
             val=val,
-            key_prefix=key_prefix,
-            key_sep=key_sep,
-            key_modificator=key_modificator,
+            prefix=key_prefix,
+            sep=key_sep,
+            keymod=key_modificator,
             val_visitor=val_visitor,
-            merge_method=merge_method,
+            strategy=strategy,
             merge_inverse=merge_inverse,
             mapping_type=Mapz,
         )
@@ -63,7 +71,7 @@ class Mapz(ProtoMapz):
     def update(  # type: ignore
         self,
         mapping: Mapping[Hashable, Any],
-        method: str = "recursive",
+        strategy: methods.Strategy = methods.Strategy.Deep,
     ) -> Dict[Hashable, Any]:
         # Intentionally incompatible with 'update' method of dict and MutableMapping.
         # The reason for is the requirement to return a Dict instead of None.
@@ -77,7 +85,7 @@ class Mapz(ProtoMapz):
         return methods.update(
             mapping=self,
             other=mapping,
-            method=method,
+            strategy=strategy,
         )
 
     def merge(
@@ -85,7 +93,7 @@ class Mapz(ProtoMapz):
         *mapping: Mapping[Hashable, Any],
         key_prefix: str = "",
         key_sep: str = "__",
-        merge_method: str = "recursive",
+        strategy: methods.Strategy = methods.Strategy.Deep,
         merge_inverse: bool = False,
     ) -> Dict[Hashable, Any]:
         return methods.merge(
@@ -93,7 +101,7 @@ class Mapz(ProtoMapz):
             *mapping,
             key_prefix=key_prefix,
             key_sep=key_sep,
-            merge_method=merge_method,
+            merge_strategy=strategy,
             merge_inverse=merge_inverse,
             mapping_type=Mapz,
         )
@@ -103,14 +111,14 @@ class Mapz(ProtoMapz):
         *mapping: Mapping[Hashable, Any],
         key_prefix: str = "",
         key_sep: str = "__",
-        merge_method: str = "recursive",
+        strategy: methods.Strategy = methods.Strategy.Deep,
     ) -> Dict[Hashable, Any]:
         return methods.merge(
             self,
             *mapping,
             key_prefix=key_prefix,
             key_sep=key_sep,
-            merge_method=merge_method,
+            merge_strategy=strategy,
             merge_inverse=True,
             mapping_type=Mapz,
         )

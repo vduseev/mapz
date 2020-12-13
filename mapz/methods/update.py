@@ -1,18 +1,25 @@
 from typing import Any, Dict, Hashable, Mapping
 from types import MappingProxyType
 
+from enum import Enum
+
+
+class Strategy(Enum):
+    Deep = 1
+    Shallow = 2
+
 
 def update(
     mapping: Dict[Hashable, Any],
     other: Mapping[Hashable, Any],
-    method: str = "recursive",
+    strategy: Strategy = Strategy.Deep,
 ) -> Dict[Hashable, Any]:
 
     if isinstance(mapping, Dict) and isinstance(other, Mapping):
 
         for key in other:
             if (
-                method == "recursive"
+                strategy is Strategy.Deep
                 and key in mapping
                 and isinstance(dict.__getitem__(mapping, key), Mapping)
                 and isinstance(
@@ -22,7 +29,7 @@ def update(
                 update(
                     dict.__getitem__(mapping, key),
                     MappingProxyType(other).__getitem__(key),
-                    method=method,
+                    strategy=strategy,
                 )
 
             else:

@@ -4,7 +4,7 @@ from .traverse import (
     TraverseVisitorCallable as TraverseVisitorCallable,
     OrderingCallable as OrderingCallable,
 )
-from .update import update as update
+from .update import update as update, Strategy as Strategy
 from .copy import copy as copy, deepcopy as deepcopy
 from .splitkey import (
     splitkey as splitkey,

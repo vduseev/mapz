@@ -129,7 +129,6 @@ def test_shallow_copy(data):
     shallow1 = copy(m)
     shallow2 = m.copy()
 
-
     assert m.databases.db1.host == "localhost"
     m.databases.db1.host = "172.31.0.4"
     assert m.databases.db1.host == "172.31.0.4"

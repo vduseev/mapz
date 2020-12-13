@@ -1,4 +1,5 @@
 from .set import set as zset
+from .update import Strategy
 
 from typing import (
     Dict,
@@ -16,7 +17,7 @@ def merge(
     *other: Mapping[Hashable, Any],
     key_prefix: str = "",
     key_sep: str = "__",
-    merge_method: str = "recursive",
+    merge_strategy: Strategy = Strategy.Deep,
     merge_inverse: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
@@ -35,9 +36,9 @@ def merge(
             mapping,
             k,
             v,
-            key_prefix=key_prefix,
-            key_sep=key_sep,
-            merge_method=merge_method,
+            prefix=key_prefix,
+            sep=key_sep,
+            strategy=merge_strategy,
             merge_inverse=merge_inverse,
             mapping_type=mapping_type,
         )
