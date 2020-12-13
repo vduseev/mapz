@@ -20,4 +20,4 @@ def test_default(data):
 
 def test_inverse(data):
 
-    assert zset(data, "name", "Duhast", merge_inverse=True)["name"] == "Boris"
+    assert zset(data, "name", "Duhast", inverse=True)["name"] == "Boris"

@@ -11,18 +11,13 @@ def set(
     val: Any,
     prefix: str = "",
     sep: str = ".",
-    keymod: SplitkeyModificatorCallable = lambda key, parts: parts,
-    val_visitor: TraverseVisitorCallable = lambda k, v, **kwargs: (
-        k,
-        v,
-    ),
     strategy: Strategy = Strategy.Deep,
-    merge_inverse: bool = False,
+    inverse: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
 
-    key_parts = splitkey(key, prefix=prefix, sep=sep, modificator=keymod)
-    value = traverse(val, val_visitor, mapping_type=mapping_type)
+    key_parts = splitkey(key, prefix=prefix, sep=sep)
+    value = traverse(arg=val, mapping_type=mapping_type)
 
     # Build dict in reverse order from list of key parts and the value
     result = value
@@ -32,7 +27,7 @@ def set(
         dict.__setitem__(d, k, result)
         result = d
 
-    if merge_inverse:
+    if inverse:
         update(result, mapping, strategy=strategy)
         mapping.clear()
 

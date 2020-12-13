@@ -47,13 +47,8 @@ class Mapz(ProtoMapz):
         val: Any,
         key_prefix: str = "",
         key_sep: str = ".",
-        key_modificator: methods.SplitkeyModificatorCallable = lambda key, parts: parts,
-        val_visitor: methods.TraverseVisitorCallable = lambda k, v, **kwargs: (
-            k,
-            v,
-        ),
         strategy: methods.Strategy = methods.Strategy.Deep,
-        merge_inverse: bool = False,
+        inverse: bool = False,
     ) -> Dict[Hashable, Any]:
         return methods.set(
             mapping=self,
@@ -61,10 +56,8 @@ class Mapz(ProtoMapz):
             val=val,
             prefix=key_prefix,
             sep=key_sep,
-            keymod=key_modificator,
-            val_visitor=val_visitor,
             strategy=strategy,
-            merge_inverse=merge_inverse,
+            inverse=inverse,
             mapping_type=Mapz,
         )
 
@@ -99,10 +92,10 @@ class Mapz(ProtoMapz):
         return methods.merge(
             self,
             *mapping,
-            key_prefix=key_prefix,
-            key_sep=key_sep,
-            merge_strategy=strategy,
-            merge_inverse=merge_inverse,
+            prefix=key_prefix,
+            sep=key_sep,
+            strategy=strategy,
+            inverse=merge_inverse,
             mapping_type=Mapz,
         )
 
@@ -116,10 +109,10 @@ class Mapz(ProtoMapz):
         return methods.merge(
             self,
             *mapping,
-            key_prefix=key_prefix,
-            key_sep=key_sep,
-            merge_strategy=strategy,
-            merge_inverse=True,
+            prefix=key_prefix,
+            sep=key_sep,
+            strategy=strategy,
+            inverse=True,
             mapping_type=Mapz,
         )
 

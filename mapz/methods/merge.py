@@ -15,10 +15,10 @@ from typing import (
 def merge(
     mapping: Dict[Hashable, Any],
     *other: Mapping[Hashable, Any],
-    key_prefix: str = "",
-    key_sep: str = "__",
-    merge_strategy: Strategy = Strategy.Deep,
-    merge_inverse: bool = False,
+    prefix: str = "",
+    sep: str = "__",
+    strategy: Strategy = Strategy.Deep,
+    inverse: bool = False,
     mapping_type: Type[Dict[Hashable, Any]] = dict,
 ) -> Dict[Hashable, Any]:
 
@@ -36,10 +36,10 @@ def merge(
             mapping,
             k,
             v,
-            prefix=key_prefix,
-            sep=key_sep,
-            strategy=merge_strategy,
-            merge_inverse=merge_inverse,
+            prefix=prefix,
+            sep=sep,
+            strategy=strategy,
+            inverse=inverse,
             mapping_type=mapping_type,
         )
 
