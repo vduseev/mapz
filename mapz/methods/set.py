@@ -1,7 +1,7 @@
 from typing import Dict, Hashable, Any, Type
 
-from .splitkey import splitkey, SplitkeyModificatorCallable
-from .traverse import traverse, TraverseVisitorCallable
+from .splitkey import splitkey
+from .traverse import traverse
 from .update import update, Strategy
 
 

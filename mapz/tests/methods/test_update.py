@@ -6,7 +6,7 @@ with another.
 TODO: test updating "brothers" with list instead of dict.
 """
 
-from mapz.methods.update import update, Strategy
+from mapz.methods.update import Strategy, update
 
 import pytest
 
