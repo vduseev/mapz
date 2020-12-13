@@ -38,8 +38,8 @@ def issequence(arg: Any) -> bool:
     return isinstance(arg, Sequence) and not isinstance(arg, STR_TYPES)
 
 
-def iskvresult(result: Optional[Tuple[Any, ...]]) -> bool:
-    return isinstance(result, tuple) and len(result) == 2
+def iskvtuple(arg: Optional[Tuple[Any, ...]]) -> bool:
+    return isinstance(arg, tuple) and len(arg) == 2
 
 
 def traverse(
@@ -95,7 +95,7 @@ def traverse(
             # At this point, ``func``` can transform both ``k`` and ``v``
             # to anything, even to None. Or turn ``v`` into a plain value.
             result = func(k, v, **kwargs)
-            if result is not None and iskvresult(result):
+            if result is not None and iskvtuple(result):
                 k, v = result
 
             if ismapping(v) or issequence(v):
@@ -122,7 +122,7 @@ def traverse(
             kwargs["_index"] = idx
 
             result = func(None, i, **kwargs)
-            if result is not None and iskvresult(result):
+            if result is not None and iskvtuple(result):
                 k, i = result
 
             if ismapping(i) or issequence(i):
@@ -145,7 +145,7 @@ def traverse(
         # ``arg`` itself if there were no results.
         result = func(None, arg, **kwargs)
 
-        if result is not None and iskvresult(result):
+        if result is not None and iskvtuple(result):
             k, v = result
             return v
         else:

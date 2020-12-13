@@ -4,7 +4,41 @@ from typing import Dict, Optional, Union, List, Hashable, Any
 def getsert(
     data: Dict[Hashable, Any], key: Hashable, default: Any = None
 ) -> Any:
-    """Implements defaultdict feature."""
+    """Implements defaultdict.
+
+    ``getsert`` is Get + Insert. In case the *key* does not exist
+    in *data* it will be created using *default* as value.
+
+    However, if *data* instance is not a subclass of Dict nothing
+    happens and whatever is in *default* is returned.
+
+    Also if *default* is None, then even if *data* is a valid Dict
+    and *key* is not in *data*, nothing happens and None is returned.
+
+    Args:
+        data (Dict[Hashable, Any]): Dict container from which
+            the value of ``key`` is requested.
+        key (Hashable): Key which identifies requested value.
+        default (Any): Value to insert into ``data`` if ``key``
+            did not exist in ``data``. Or value to return if
+            ``data`` is not a Dict subclass.
+
+    Returns:
+        Any: Value corresponding to the ``key`` in ``data`` or
+        ``default`` value.
+
+        Returns ``default`` if ``data`` is not a Dict.
+
+        Returns None if ``key`` is not in ``data`` and
+        ``default`` is None.
+
+        Returns ``default`` if ``key`` is not in ``data`` but
+        ``default`` is not None. Inserts ``default`` to ``data``
+        under ``key`` before returning it.
+
+    Raises:
+        Nothing. This function is never supposed to raise anything.
+    """
 
     if isinstance(data, Dict):
 
@@ -12,7 +46,7 @@ def getsert(
 
             # Do not insert default value into data if it's None.
             if default is None:
-                return default
+                return None
             dict.__setitem__(data, key, default)
 
         return dict.__getitem__(data, key)

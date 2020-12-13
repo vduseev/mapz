@@ -1,9 +1,13 @@
+"""Test mapping modifiers."""
+
 from typing import Mapping
+
 from mapz import Mapz
-from mapz.modifiers.mapping import to_dict
 
 
 def test_to_dict():
+    """Test that Mapz is cast to dict object using to_dict method."""
+
     d = {"database": {"host": "localhost", "port": 1234}}
 
     m = Mapz(d)
