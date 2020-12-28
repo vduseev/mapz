@@ -1,11 +1,63 @@
 """Test getter methods.
 
-This module tests 2 main "get" methods of the library: ``getsert`` and ``get``.
+Test two main "get" methods of the library: ``getsert`` and ``get``.
 """
 
 from typing import Any, Dict
 
 from mapz.methods.get import get, getsert
+
+import pytest
+
+
+@pytest.fixture
+def data():
+    """Provide basic dict test structure."""
+
+    return {"name": "Duhast"}
+
+
+@pytest.fixture
+def list_data():
+    """Provide basic list structure for tests."""
+
+    return [1, True, 4, {"a", "b"}, "text"]
+
+
+@pytest.fixture
+def nested_dict(data, list_data):
+    """Provide nested dict, with list and dict."""
+
+    # {
+    #   "name": "Duhast",
+    #   "l": [
+    #       1, True, 4, {"a", "b"}, "text",
+    #       {"name": "Duhast"}
+    #   ],
+    #   "d": {
+    #       "name": "Duhast",
+    #       "l": [1, True, 4, {"a", "b"}, "text"]
+    #   }
+    # }
+    nd: Dict[str, Any] = dict(data)
+    nd["l"] = list(list_data) + [dict(data)]
+    nd["d"] = dict(data, l=list(list_data))
+    return nd
+
+
+@pytest.fixture
+def nested_list(data, list_data):
+    """Provide nested list, with dict and list."""
+
+    # [
+    #   [1, True, 4, {"a", "b"}, "text"],
+    #   1, True, 4, {"a", "b"}, "text",
+    #   { "name": "Duhast" }
+    # ]
+    nl = list(list_data)
+    nl.append(dict(data))
+    nl.insert(0, list(list_data))
+    return nl
 
 
 def test_getsert():
@@ -22,8 +74,8 @@ def test_getsert():
     # data is valid dict, "key" not in data, and
     # default = True, which should insert key=True
     # into data and return the resulting value
-    assert getsert(data, "key", True) == True
-    assert data["key"] == True
+    assert getsert(data, "key", True) is True
+    assert data["key"] is True
 
     # data is not a valid dict, "key" cannot be in data,
     # default = False, so nothing should happend
@@ -31,111 +83,78 @@ def test_getsert():
     assert getsert(True, "key", False) is False
 
 
-# Basic dict
-d = {"name": "Duhast"}
-
-# Basic list
-l = [1, True, 4, {"a", "b"}, "text"]
-
-# Nested dict, with list and dict
-# {
-#   "name": "Duhast",
-#   "l": [
-#       1, True, 4, {"a", "b"}, "text",
-#       {"name": "Duhast"}
-#   ],
-#   "d": {
-#       "name": "Duhast",
-#       "l": [1, True, 4, {"a", "b"}, "text"]
-#   }
-# }
-nd: Dict[str, Any] = dict(d)
-nd["l"] = list(l) + [dict(d)]
-nd["d"] = dict(d, l=list(l))
-
-# Nested list, with dict and list
-# [
-#   [1, True, 4, {"a", "b"}, "text"],
-#   1, True, 4, {"a", "b"}, "text",
-#   { "name": "Duhast" }
-# ]
-nl = list(l)
-nl.append(dict(d))
-nl.insert(0, list(l))
-
-
-def test_dict():
+def test_dict(data):
     """Test accessing items in dict."""
 
     # Existing, str key
-    assert get(d, "name") == "Duhast"
+    assert get(data, "name") == "Duhast"
 
     # Non-existing, str key
-    assert get(d, "surname") is None
+    assert get(data, "surname") is None
 
     # Non-existing, split str key
-    assert get(d, "my.surname") is None
-    assert get(d, "my.surname.is") is None
+    assert get(data, "my.surname") is None
+    assert get(data, "my.surname.is") is None
 
     # Non-existing, None key
-    assert get(d, None) is None
+    assert get(data, None) is None
 
 
-def test_list():
+def test_list(list_data):
     """Test accessing items in list."""
 
     # Existing, int key
-    assert get(l, 1) == True
+    assert get(list_data, 1) is True
 
     # Existing, str key
-    assert get(l, "0") == 1
+    assert get(list_data, "0") == 1
 
     # Reverse, int key
-    assert get(l, -1) == "text"
+    assert get(list_data, -1) == "text"
 
     # Reverse, str key
-    assert get(l, "-2") == {"a", "b"}
-    assert get(l, "-5") == 1
+    assert get(list_data, "-2") == {"a", "b"}
+    assert get(list_data, "-5") == 1
 
     # Reverse, out of bound, int key
-    assert get(l, -6) is None
+    assert get(list_data, -6) is None
 
     # Reverse, out of bound, str key
-    assert get(l, "-100000") is None
+    assert get(list_data, "-100000") is None
 
 
-def test_list_wrong_key():
+def test_list_wrong_key(list_data):
     """Test incorrectly accessing values in list."""
 
-    assert get(l, "0s1") is None
+    assert get(list_data, "0s1") is None
 
-    assert get(l, True) is None
+    assert get(list_data, True) is None
 
 
-def test_nested_dict():
+def test_nested_dict(nested_dict):
     """Test accessing values in a nested dict."""
 
     # Existing, not nested, str key
-    assert get(nd, "name") == "Duhast"
+    assert get(nested_dict, "name") == "Duhast"
 
     # Existing, nested, str key
-    assert get(nd, "l.2") == 4
+    assert get(nested_dict, "l.2") == 4
 
-    assert get(nd, "l.-2") == "text"
+    assert get(nested_dict, "l.-2") == "text"
 
-    assert get(nd, "l.-1.name") == "Duhast"
+    assert get(nested_dict, "l.-1.name") == "Duhast"
 
-    assert get(nd, "d.l.1") == True
+    assert get(nested_dict, "d.l.1") is True
 
 
-def test_nested_list():
+def test_nested_list(nested_list):
     """Test accessing values in a nested list."""
 
-    assert get(nl, 1) == True
+    assert get(nested_list, 2) is True
 
-    assert get(nl, "-1.name") == "Duhast"
+    assert get(nested_list, "-1.name") == "Duhast"
 
-    assert get(nl, "0.3") == {"a", "b"}
+    assert get(nested_list, "0.3") == {"a", "b"}
 
 
 def test_wrong_data_type():
@@ -143,4 +162,4 @@ def test_wrong_data_type():
 
     assert get(True, "key") is None
 
-    assert get(None, 1, False) == False
+    assert get(None, 1, False) is False
