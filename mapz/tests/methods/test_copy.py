@@ -1,14 +1,19 @@
-import pytest
+"""Test copying functions."""
 
 from mapz.methods.copy import copy, deepcopy
+
+import pytest
 
 
 @pytest.fixture
 def data():
+    """Provide common test data structure."""
+
     return {"name": "Boris", "data": {"songs": ["Du Hast", "Du Hast - Live"]}}
 
 
-def test_clone(data):
+def test_shallow_copy(data):
+    """Test shallow copy."""
 
     cloned = copy(data)
 
@@ -21,7 +26,8 @@ def test_clone(data):
     assert cloned["data"]["songs"][0] == "Du Hast - Remix"
 
 
-def test_deepclone(data):
+def test_deep_copy(data):
+    """Test deep copy."""
 
     deepcloned = deepcopy(data)
 
