@@ -20,7 +20,7 @@ def to_dict(
         mapping: Mapping structure to convert.
         inplace (bool): Whether to replace given Dict with converted
             ``dict`` object. Only works if the passed ``mapping`` is
-            also a mutable Dict-like object.
+            also a mutable Dict-like object. Defaults to False.
 
     Returns:
         dict: Plain dictionary object with the same structure. If the

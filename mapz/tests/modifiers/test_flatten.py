@@ -25,7 +25,6 @@ def test_default(data_map):
     """Test that nested dicts are transformed into multi-word keys."""
 
     flat = to_flat(data_map)
-    print(flat)
 
     assert flat["name"] == "Boris"
     assert flat["data.songs"] == data_map["data"]["songs"]

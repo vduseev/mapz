@@ -62,7 +62,7 @@ def to_table(
     Args:
         mapping: Mapping or dictionary to transform to table.
         headers: Iterable of headers for the table. Defaults to
-            ["Key", "Value"]
+            ("Key", "Value").
         indentation (str): String that will be used as an indentation of
             nested keys in the table. Defaults to double-space "  ".
         limit (int): Row limit. Limits the number of rows in the resulting
