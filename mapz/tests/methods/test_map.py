@@ -1,39 +1,51 @@
-import pytest
+"""Test map function."""
 
 from mapz.methods.map import map as zmap
+
+import pytest
 
 
 @pytest.fixture
 def data():
-    return {"name": "Boris", "data": {"songs": ["Du Hast", "Du Hast - Live"]}}
+    """Provide common data structure for tests below."""
+
+    return {
+        "name": "Boris",
+        "music": {"songs": ["Du Hast", "Du Hast - Live"]},
+    }
 
 
-def modificator(*args, **kwargs):
-    k, v = args
+def modificator(k, v, **kwargs):
+    """Modify string value by prepending it with '@'."""
+
     if isinstance(v, str):
         v = f"@{v}"
     return (k, v)
 
 
 def test_apply(data):
+    """Test applying modifying visitor."""
 
     modified = zmap(data, modificator)
 
     assert modified["name"] == "@Boris"
     assert data["name"] == "Boris"
 
-    assert modified["data"]["songs"] == ["@Du Hast", "@Du Hast - Live"]
-    assert data["data"]["songs"] == ["Du Hast", "Du Hast - Live"]
+    assert modified["music"]["songs"] == ["@Du Hast", "@Du Hast - Live"]
+    assert data["music"]["songs"] == ["Du Hast", "Du Hast - Live"]
 
 
 def test_apply_inplace(data):
+    """Test applying modifying visitor in place."""
 
     zmap(data, modificator, inplace=True)
 
     assert data["name"] == "@Boris"
 
-    assert data["data"]["songs"] == ["@Du Hast", "@Du Hast - Live"]
+    assert data["music"]["songs"] == ["@Du Hast", "@Du Hast - Live"]
 
 
 def test_default_modificator(data):
+    """Test default map values that should not change anything."""
+
     assert zmap(data)["name"] == "Boris"
