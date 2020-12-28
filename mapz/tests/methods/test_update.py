@@ -19,6 +19,7 @@ def data():
         "name": "Duhast",
         True: False,
         "brothers": {"Kris": 36, "Mike": 29},
+        "disks": ["D1", "D2"]
     }
 
 
@@ -31,7 +32,7 @@ def test_shallow(data):
     assert data["name"] == "Duhast"
     assert data["parental"] == "Vyacheslavovich"
 
-    # With shallow strategy "True" get gets successfully overwritten.
+    # With shallow strategy "True" gets successfully overwritten.
     update(data, {True: True}, Strategy.Shallow)
     assert data[True] is True
 
@@ -42,6 +43,10 @@ def test_shallow(data):
     update(data, {"brothers": {"Kris": 48}}, Strategy.Shallow)
     assert data["brothers"] == {"Kris": 48}
 
+    # Lists are overwritten as any other fields in case of Shallow strategy.
+    update(data, {"disks": ["A1"]}, Strategy.Shallow)
+    assert data["disks"] == ["A1"]
+
 
 def test_deep(data):
     """Test deep update."""
@@ -50,6 +55,10 @@ def test_deep(data):
     # recursively look into nested objects to update them properly.
     update(data, {"brothers": {"Kris": 48}})
     assert data["brothers"] == {"Kris": 48, "Mike": 29}
+
+    # Even with the Deep merge strategy lists are simply overwritten.
+    update(data, {"disks": ["A2"]})
+    assert data["disks"] == ["A2"]
 
 
 def test_update_wrong_args():
