@@ -27,7 +27,7 @@ def to_flat(
             to empty string "".
         sep (str): Specify a separator for concatenated keys. Defaults to
             single dot ".".
-        inplace (bool): If True, rebound given mapping variable to newly
+        inplace (bool): If True, replace given mapping variable with newly
             generated flattened structure. Only works if the given mapping
             is a mutable Dict. Defaults to False.
         mapping_type: Which mapping type to use to generate flattened
