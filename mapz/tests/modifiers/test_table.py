@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.fixture
-def data_map():
+def data():
     """Provide reusable Dict-like structure for this test."""
 
     return {
@@ -21,7 +21,7 @@ def data_map():
     }
 
 
-def test_simple(data_map):
+def test_simple(data):
     """Test positive simple case.
 
     Includes:
@@ -29,7 +29,7 @@ def test_simple(data_map):
         2. List where each object receives a dash before value
     """
 
-    headers, rows = to_table(data_map)
+    headers, rows = to_table(data)
 
     assert headers == ["Key", "Value"]
     assert rows == [
@@ -43,14 +43,14 @@ def test_simple(data_map):
     ]
 
 
-def test_limit(data_map):
+def test_limit(data):
     """Test table print limit.
 
     In case below only 3 rows must be printed finished by
     an additional row indicating incomplete results.
     """
 
-    headers, rows = to_table(data_map, limit=3)
+    _, rows = to_table(data, limit=3)
 
     assert rows == [
         ["database", ""],
