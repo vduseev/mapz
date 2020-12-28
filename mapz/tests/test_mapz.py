@@ -1,3 +1,5 @@
+"""Test Mapz class."""
+
 from mapz.mapz import Mapz
 
 import pytest
@@ -5,6 +7,8 @@ import pytest
 
 @pytest.fixture
 def data():
+    """Provide common dict data structure for tests."""
+
     return {
         "databases": {
             "db1": {
@@ -25,6 +29,7 @@ def data():
 
 
 def test_constructor(data):
+    """Test correct instance creation."""
 
     assert Mapz(data) == data
 
@@ -36,6 +41,7 @@ def test_constructor(data):
 
 
 def test_get(data):
+    """Test data access methods."""
 
     m = Mapz(data)
 
@@ -51,15 +57,17 @@ def test_get(data):
 
 
 def test_get_nondefault(data):
+    """Test data access methods with non-existent keys."""
 
     m = Mapz(data)
 
     assert m.get("nonexistent") == Mapz()
-    assert m.get("theother", default=None) == None
+    assert m.get("theother", default=None) is None
     assert m.theother == Mapz()
 
 
 def test_set(data):
+    """Test setting the value as 'set' method."""
 
     m = Mapz(data)
 
@@ -70,14 +78,16 @@ def test_set(data):
     assert m.databases.db1.host.loop == "127.0.0.1"
 
     assert (
+        # fmt: off
         m.set(
             "databases_db1_host_loop", "172.0.0.1", key_sep="_"
-        ).databases.db1.host.loop
-        == "172.0.0.1"
+        ).databases.db1.host.loop == "172.0.0.1"
+        # fmt: on
     )
 
 
 def test_set_item(data):
+    """Test setting the value using subscript method."""
 
     m = Mapz(data)
 
@@ -92,6 +102,7 @@ def test_set_item(data):
 
 
 def test_set_attr(data):
+    """Test setting the value using attributes."""
 
     m = Mapz(data)
 
@@ -107,6 +118,7 @@ def test_set_attr(data):
 
 
 def test_update(data):
+    """Test that update overwrites the field."""
 
     m = Mapz(data)
 
@@ -114,6 +126,7 @@ def test_update(data):
 
 
 def test_submerge(data):
+    """Test submerge method."""
 
     m = Mapz(data)
 
@@ -122,6 +135,7 @@ def test_submerge(data):
 
 
 def test_shallow_copy(data):
+    """Test shallow copying."""
 
     from copy import copy
 
@@ -143,6 +157,7 @@ def test_shallow_copy(data):
 
 
 def test_deep_copy(data):
+    """Test deep copying."""
 
     from copy import deepcopy
 
@@ -158,6 +173,7 @@ def test_deep_copy(data):
 
 
 def test_lower(data):
+    """Test changing keys to lowercase."""
 
     m = Mapz(data)
     low = m.lower()
@@ -168,6 +184,7 @@ def test_lower(data):
 
 
 def test_upper(data):
+    """Test changing keys to uppercase."""
 
     m = Mapz(data)
     up = m.upper()
@@ -178,6 +195,7 @@ def test_upper(data):
 
 
 def test_flatten(data):
+    """Test flattening dict structure."""
 
     m = Mapz(data)
     flat = m.flatten(prefix="f_")
@@ -187,12 +205,16 @@ def test_flatten(data):
 
 
 def test_to_dict(data):
+    """Test conversion to plain dict."""
+
     def keypartswap(*args, **kwargs):
+        """Swap first part of string key with its seconds part."""
+
         k, v = args
         if k:
             k = str(k)
-            l = len(k) // 2
-            k = k[l:] + k[:l]
+            length = len(k) // 2
+            k = k[length:] + k[:length]
 
         return k, v
 
@@ -209,9 +231,10 @@ def test_to_dict(data):
 
 
 def test_to_table(data):
+    """Test conversion to printable table."""
 
     m = Mapz(data)
-    headers, rows = m.to_table()
+    _, rows = m.to_table()
 
     assert rows == [
         ["Params", ""],
