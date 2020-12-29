@@ -19,7 +19,7 @@ def data():
         "name": "Duhast",
         True: False,
         "brothers": {"Kris": 36, "Mike": 29},
-        "disks": ["D1", "D2"]
+        "disks": ["D1", "D2"],
     }
 
 

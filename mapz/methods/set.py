@@ -31,6 +31,9 @@ def set(
         update(result, mapping, strategy=strategy)
         mapping.clear()
 
+    # TODO: possibility of performance improvement here.
+    # If inverse - just return 'result' instead of pouring it
+    # back into 'mapping'.
     update(mapping, result, strategy=strategy)
 
     return mapping

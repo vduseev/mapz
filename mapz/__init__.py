@@ -6,6 +6,8 @@ from .modifiers import *
 
 # from .modifiers import __all__ as _all_modifiers
 
+__version__ = "1.1.0"
+
 
 # __all__ = [
 #     Mapz.__name__,

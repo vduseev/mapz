@@ -2,7 +2,7 @@
 
 Hierarchy of methods:
 
-get
+merge   <-  set     <-  update
 """
 
 
