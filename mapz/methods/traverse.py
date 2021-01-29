@@ -6,18 +6,15 @@ from typing import (
     List,
     Mapping,
     Optional,
+    Protocol,
     Sequence,
     Tuple,
     Type,
 )
 
-from mypy_extensions import Arg, KwArg
 
-
-TraverseVisitorCallable = Callable[
-    [Arg(Any, "k"), Arg(Any, "v"), KwArg(Any)],  # noqa: F821
-    Optional[Tuple[Any, Any]],
-]
+class TraverseVisitorCallable(Protocol):
+    def __call__(self, k: Any, v: Any, **kwargs: Any) -> Optional[Tuple[Any, Any]]: ...  # pragma: no cover
 OrderingCallable = Callable[[Sequence], List]
 
 
